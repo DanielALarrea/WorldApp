@@ -20,9 +20,8 @@ public class CountryDAOClass implements CountryDAO{
 	//retrieve list of Countries from the database
 	@Override
 	public List <Country> getAllCountries() {
-		System.out.println("Looking for countries...");
+		System.out.println("Looking for all countries...");
 		Connection con = ConnectionFactory.getConnection();
-		System.out.println("connected to database...");
 		try {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM country");
@@ -30,7 +29,6 @@ public class CountryDAOClass implements CountryDAO{
 
 			while(rs.next())
 			{
-				
 				Country co = new Country();
 				co.setCountryId(rs.getInt("countryid"));
 				co.setCountryName(rs.getString("countryname"));
@@ -49,6 +47,7 @@ public class CountryDAOClass implements CountryDAO{
 
 	@Override
 	public Country getCountry(int id) {
+		System.out.println("Getting specific country...");
 		Connection con = ConnectionFactory.getConnection();
 		try {
 			Statement stmt = con.createStatement();
@@ -73,6 +72,7 @@ public class CountryDAOClass implements CountryDAO{
 
 	@Override
 	public boolean updateCountry(Country co) {
+		System.out.println("Updating country...");
 		Connection connection = ConnectionFactory.getConnection();
 		try {
 			PreparedStatement ps = connection.prepareStatement("UPDATE country SET countryname=?, population=? WHERE id=?");
@@ -96,5 +96,6 @@ public class CountryDAOClass implements CountryDAO{
 
 	@Override
 	public void deleteCountry(Country co) {
+		System.out.println("Deleting country...");
 	}
 }

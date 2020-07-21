@@ -19,6 +19,7 @@ public class CountryAndCityDAOClass implements CountryAndCityDAO {
 	//retrieve list of Countries from the database
 	@Override
 	public List <CountryCityJoin> getCityIdJoin(int cityId) {
+		System.out.println("Getting country and city by cityId...");
 		Connection con = ConnectionFactory.getConnection();
 		try {
 			Statement stmt = con.createStatement();
@@ -59,6 +60,7 @@ public class CountryAndCityDAOClass implements CountryAndCityDAO {
 
 	@Override
 	public List <CountryCityJoin> getIsCapitalJoin(int isCapital) {
+		System.out.println("Getting country and city based on capital status...");
 		Connection con = ConnectionFactory.getConnection();
 		try {
 			Statement stmt = con.createStatement();

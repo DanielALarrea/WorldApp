@@ -10,85 +10,89 @@ import java.util.List;
 
 public class CityDAOClass implements CityDAO{
 
-	 //list is working as a database
-	   List<City> cityList;
+	//list is working as a database
+	List<City> cityList;
 
-	   public CityDAOClass(){
-		   cityList = new ArrayList<City>();
-	   }
-		 //retrieve list of Cities from the database
-	   @Override
-	     public List <City> getAllCities() {
-			   Connection con = ConnectionFactory.getConnection();
-			    try {
-			        Statement stmt = con.createStatement();
-			        ResultSet rs = stmt.executeQuery("SELECT * FROM city");
-			        List<City> cityList = new ArrayList<City>();
+	public CityDAOClass(){
+		cityList = new ArrayList<City>();
+	}
+	//retrieve list of Cities from the database
+	@Override
+	public List <City> getAllCities() {
+		System.out.println("Looking for all cities...");
+		Connection con = ConnectionFactory.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM city");
+			List<City> cityList = new ArrayList<City>();
 
-			        while(rs.next())
-			        {
-			        	City ci = new City();
-			        	ci.setCityId(rs.getInt("cityid"));
-			        	ci.setName(rs.getString("name"));
-			        	ci.setCapital(rs.getBoolean("iscapital"));
-			        	cityList.add(ci);
-			        }
-			        stmt.close();
-			        rs.close();
-			        return cityList;
-			    } catch (SQLException ex) {
-			        ex.printStackTrace();
-			    }
-			    return null;
+			while(rs.next())
+			{
+				City ci = new City();
+				ci.setCityId(rs.getInt("cityid"));
+				ci.setName(rs.getString("name"));
+				ci.setCapital(rs.getBoolean("iscapital"));
+				cityList.add(ci);
 			}
-	   
+			stmt.close();
+			rs.close();
+			return cityList;
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
-	   @Override
-	   public City getCity(int id) {
-		    Connection con = ConnectionFactory.getConnection();
-		        try {
-		            Statement stmt = con.createStatement();
-		            ResultSet rs = stmt.executeQuery("SELECT * FROM city WHERE cityid=" + id);
-		            if(rs.next())
-		            {
-		            	City ci = new City();
-		            	ci.setCityId(rs.getInt("cityid"));
-			        	ci.setName(rs.getString("name"));
-			        	ci.setCapital(rs.getBoolean("iscapital"));
-			        	return ci;
-		            }
-		            stmt.close();
-		            rs.close();
-		        } catch (SQLException ex) {
-	            ex.printStackTrace();
-		        }
-		    return null;
+
+	@Override
+	public City getCity(int id) {
+		System.out.println("Getting city...");
+		Connection con = ConnectionFactory.getConnection();
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM city WHERE cityid=" + id);
+			if(rs.next())
+			{
+				City ci = new City();
+				ci.setCityId(rs.getInt("cityid"));
+				ci.setName(rs.getString("name"));
+				ci.setCapital(rs.getBoolean("iscapital"));
+				return ci;
+			}
+			stmt.close();
+			rs.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+
+	@Override
+	public boolean updateCity(City ci) {
+		System.out.println("Updating city...");
+		Connection connection = ConnectionFactory.getConnection();
+		try {
+			PreparedStatement ps = connection.prepareStatement("UPDATE city SET name=?, iscapital=? WHERE id=?");
+			ps.setString(2, ci.getName());
+			ps.setBoolean(3, ci.isCapital());
+			ps.setInt(1, ci.getCityId());
+
+			int i = ps.executeUpdate();
+
+			if(i == 1) {
+				return true;
+			}
+			ps.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
 		}
 
-	   
-	   @Override
-	   public boolean updateCity(City ci) {
-		   Connection connection = ConnectionFactory.getConnection();
-		   try {
-			   PreparedStatement ps = connection.prepareStatement("UPDATE city SET name=?, iscapital=? WHERE id=?");
-			   ps.setString(2, ci.getName());
-			   ps.setBoolean(3, ci.isCapital());
-			   ps.setInt(1, ci.getCityId());
+		return false;
+	}
 
-			   int i = ps.executeUpdate();
-
-			   if(i == 1) {
-				   return true;
-			   }
-			   ps.close();
-		   } catch (SQLException ex) {
-			   ex.printStackTrace();
-		   }
-
-		   return false;
-	   }
-	   
-	   @Override
-	   public void deleteCity(City ci) {
-	   }
+	@Override
+	public void deleteCity(City ci) {
+		System.out.println("Deleting city...");
+	}
 }
