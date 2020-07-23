@@ -66,7 +66,7 @@ public class MainClass {
 					isCapVal=1;
 					break;
 				case "N": 
-					isCapVal=2;
+					isCapVal=0;
 					break;
 				default: 
 					System.out.println("Invalid input, defaulting to Y");

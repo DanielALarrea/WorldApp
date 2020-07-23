@@ -9,27 +9,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.collabera.jump.worldappDAO.City;
-import com.collabera.jump.worldappDAO.CityDAO;
-import com.collabera.jump.worldappDAO.CityDAOClass;
-import com.collabera.jump.worldappDAO.Country;
 import com.collabera.jump.worldappDAO.CountryAndCityDAO;
 import com.collabera.jump.worldappDAO.CountryAndCityDAOClass;
 import com.collabera.jump.worldappDAO.CountryCityJoin;
-import com.collabera.jump.worldappDAO.CountryDAO;
-import com.collabera.jump.worldappDAO.CountryDAOClass;
 
 /**
- * Servlet implementation class WorldMainServe
+ * Servlet implementation class CityIDServe
  */
-@WebServlet("/WorldMainServe")
-public class WorldMainServe extends HttpServlet {
+@WebServlet("/CityIDServe")
+public class CityIDServe extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public WorldMainServe() {
+    public CityIDServe() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -38,8 +33,7 @@ public class WorldMainServe extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		CountryDAO coDAO = new CountryDAOClass();
-		CityDAO ciDAO = new CityDAOClass();
+		CountryAndCityDAO cociDAO = new CountryAndCityDAOClass();
 		
 		out.println("<html><body>");
 		out.println("<center><table>"
@@ -48,25 +42,27 @@ public class WorldMainServe extends HttpServlet {
 				+ "<th><a href=CapitalServe>Capital</a></th>"
 				+ "</table></center>");
 		
-		out.println("<h2>Country Data</h2>");
-		out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th></tr>");
-		for (Country co : coDAO.getAllCountries()) {
-			out.println("<tr><td>"+ co.getCountryId()
-			+ "</td><td>" + co.getCountryName()
-			+ "</td><td>"+ co.getPopulation() + " million"
-			+ "</td><td>" + co.getCityId() + "</td></tr>");
-		}
-		out.println("</table>");
+		out.println("<form name=cityidform action=CityIDServe method=GET>");
+			out.println("City ID: <input type=number name=cityid>");
+			out.println("<input type=submit value=Submit");
+		out.println("</form>");
 		
-		out.println("<h2>City Data</h2>");
-		out.println("<table border=1><tr><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
-		for (City ci : ciDAO.getAllCities()) {
-			out.println("<tr><td>"+ ci.getCityId()
-			+"</td><td>" + ci.getName()
-			+ "</td><td>"+ ci.isCapital() + "</td></tr>");
+		int cityID = -1;
+		if(request.getParameter("cityid") != null) {
+			cityID = Integer.valueOf(request.getParameter("cityid"));
+			out.println("<h2>Country and City Data for City " + cityID + "</h2>");
+			out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
+			for (CountryCityJoin cociJ : cociDAO.getCityIdJoin(cityID)) {
+				out.println("<tr><td>"+ cociJ.getCountry().getCountryId()
+						+ "</td><td>" + cociJ.getCountry().getCountryName()
+						+ "</td><td>" + cociJ.getCountry().getPopulation() + " million"
+						+ "</td><td>" + cociJ.getCountry().getCityId()
+						+ "</td><td>" + cociJ.getCity().getName()
+						+ "</td><td>" + cociJ.getCity().isCapital() + "</td></tr>");
+			}
+			out.println("</table>");
 		}
-		out.println("</table>");
-
+		
 		out.println("</body></html>");
 	}
 
