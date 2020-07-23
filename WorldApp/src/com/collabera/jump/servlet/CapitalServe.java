@@ -42,30 +42,46 @@ public class CapitalServe extends HttpServlet {
 				+ "<th><a href=CapitalServe>Capital</a></th>"
 				+ "</table></center>");
 		
-		int isCapVal = 1;
-		out.println("<h2>Country and City Data for Capital cities</h2>");
-		out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
-		for (CountryCityJoin cociJ : cociDAO.getIsCapitalJoin(1)) {
-			out.println("<tr><td>"+ cociJ.getCountry().getCountryId()
-					+ "</td><td>" + cociJ.getCountry().getCountryName()
-					+ "</td><td>" + cociJ.getCountry().getPopulation() + " million"
-					+ "</td><td>" + cociJ.getCountry().getCityId()
-					+ "</td><td>" + cociJ.getCity().getName()
-					+ "</td><td>" + cociJ.getCity().isCapital() + "</td></tr>");
-		}
-		out.println("</table>");
+		out.println("<form name=capitalform action=CapitalServe method=GET>");
+			out.println("Display all capitals <input type=radio name=capitalstatus value=iscapital><br>");
+			out.println("Display all non capitals <input type=radio name=capitalstatus value=isnotcapital><br>");
+			out.println("<input type=submit value=Submit");
+		out.println("</form>");
 		
-		out.println("<h2>Country and City Data for non-capital cities</h2>");
-		out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
-		for (CountryCityJoin cociJ : cociDAO.getIsCapitalJoin(0)) {
-			out.println("<tr><td>"+ cociJ.getCountry().getCountryId()
-					+ "</td><td>" + cociJ.getCountry().getCountryName()
-					+ "</td><td>" + cociJ.getCountry().getPopulation() + " million"
-					+ "</td><td>" + cociJ.getCountry().getCityId()
-					+ "</td><td>" + cociJ.getCity().getName()
-					+ "</td><td>" + cociJ.getCity().isCapital() + "</td></tr>");
+		int isCapVal = -1;
+		if(request.getParameter("capitalstatus") != null) {
+			if (request.getParameter("capitalstatus").equals("iscapital")) {
+				isCapVal = 1;
+				out.println("<h2>Country and City Data for Capital cities</h2>");
+			}
+			else if (request.getParameter("capitalstatus").equals("isnotcapital")) {
+				isCapVal = 0;
+				out.println("<h2>Country and City Data for non-capital cities</h2>");
+			}
+			
+			out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
+			for (CountryCityJoin cociJ : cociDAO.getIsCapitalJoin(isCapVal)) {
+				out.println("<tr><td>"+ cociJ.getCountry().getCountryId()
+						+ "</td><td>" + cociJ.getCountry().getCountryName()
+						+ "</td><td>" + cociJ.getCountry().getPopulation() + " million"
+						+ "</td><td>" + cociJ.getCountry().getCityId()
+						+ "</td><td>" + cociJ.getCity().getName()
+						+ "</td><td>" + cociJ.getCity().isCapital() + "</td></tr>");
+			}
+			out.println("</table>");
 		}
-		out.println("</table>");
+		
+		
+//		out.println("<table border=1><tr><th>Country ID</th><th>Country Name</th><th>Population</th><th>City ID</th><th>City Name</th><th>Capital?</th></tr>");
+//		for (CountryCityJoin cociJ : cociDAO.getIsCapitalJoin(0)) {
+//			out.println("<tr><td>"+ cociJ.getCountry().getCountryId()
+//					+ "</td><td>" + cociJ.getCountry().getCountryName()
+//					+ "</td><td>" + cociJ.getCountry().getPopulation() + " million"
+//					+ "</td><td>" + cociJ.getCountry().getCityId()
+//					+ "</td><td>" + cociJ.getCity().getName()
+//					+ "</td><td>" + cociJ.getCity().isCapital() + "</td></tr>");
+//		}
+//		out.println("</table>");
 		
 		out.println("</body></html>");
 	}
